@@ -9,27 +9,22 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "initialOwner",
+						"name": "_initialOwner",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
-						"name": "_ethFeed",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_btcFeed",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_btc",
+						"name": "_weth",
 						"type": "address"
 					},
 					{
 						"internalType": "address",
 						"name": "_usdc",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_router",
 						"type": "address"
 					},
 					{
@@ -107,16 +102,6 @@
 				"type": "error"
 			},
 			{
-				"inputs": [],
-				"name": "KipuBank_OracleCompromised",
-				"type": "error"
-			},
-			{
-				"inputs": [],
-				"name": "KipuBank_StalePrice",
-				"type": "error"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -144,17 +129,15 @@
 				"type": "error"
 			},
 			{
-				"anonymous": false,
 				"inputs": [
 					{
-						"indexed": false,
 						"internalType": "address",
-						"name": "feed",
+						"name": "token",
 						"type": "address"
 					}
 				],
-				"name": "KipuBank_ChainlinkFeedUpdated",
-				"type": "event"
+				"name": "SafeERC20FailedOperation",
+				"type": "error"
 			},
 			{
 				"anonymous": false,
@@ -240,44 +223,36 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "depositBTC",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "depositUSDC",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "address",
-						"name": "token",
+						"name": "_token",
 						"type": "address"
 					},
 					{
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "_amountIn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_amountMinOut",
+						"type": "uint256"
+					}
+				],
+				"name": "depositERC20",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_amount",
 						"type": "uint256"
 					},
 					{
 						"internalType": "address",
-						"name": "recipient",
+						"name": "_recipient",
 						"type": "address"
 					}
 				],
@@ -294,19 +269,6 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "i_btc",
-				"outputs": [
-					{
-						"internalType": "contract IERC20",
-						"name": "",
-						"type": "address"
 					}
 				],
 				"stateMutability": "view",
@@ -340,6 +302,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "i_weth",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "owner",
 				"outputs": [
 					{
@@ -356,51 +331,6 @@
 				"name": "renounceOwnership",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "s_btcFeed",
-				"outputs": [
-					{
-						"internalType": "contract AggregatorV3Interface",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "s_ethFeed",
-				"outputs": [
-					{
-						"internalType": "contract AggregatorV3Interface",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "token",
-						"type": "address"
-					}
-				],
-				"name": "s_supportedTokens",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "isSupported",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -423,14 +353,8 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"name": "s_totalWithdrawalsByToken",
+				"inputs": [],
+				"name": "s_totalWithdrawals",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -439,24 +363,6 @@
 					}
 				],
 				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "_btcFeed",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "_ethFeed",
-						"type": "address"
-					}
-				],
-				"name": "setFeeds",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -473,40 +379,40 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "uniswapFactory",
+				"outputs": [
 					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
+						"internalType": "contract IUniswapV2Factory",
+						"name": "",
+						"type": "address"
 					}
 				],
-				"name": "withdraw",
-				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "uniswapRouter",
+				"outputs": [
+					{
+						"internalType": "contract IUniswapV2Router02",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "amount",
+						"name": "_amount",
 						"type": "uint256"
 					}
 				],
-				"name": "withdrawBTC",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "amount",
-						"type": "uint256"
-					}
-				],
-				"name": "withdrawUSDC",
+				"name": "withdrawUsdc",
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
@@ -532,6 +438,11 @@
 					{
 						"details": "Unauthorized reentrant call."
 					}
+				],
+				"SafeERC20FailedOperation(address)": [
+					{
+						"details": "An operation with an ERC-20 token failed."
+					}
 				]
 			},
 			"kind": "dev",
@@ -554,29 +465,20 @@
 				"i_bankCap()": {
 					"notice": "Maximum Ether capacity that the bank can hold."
 				},
-				"i_btc()": {
-					"notice": "BTC ERC20 token instance."
-				},
 				"i_maxWithdrawal()": {
 					"notice": "Maximum allowed withdrawal amount per transaction."
 				},
 				"i_usdc()": {
 					"notice": "USDC ERC20 token instance."
 				},
-				"s_btcFeed()": {
-					"notice": "Chainlink BTC/USD price feed."
-				},
-				"s_ethFeed()": {
-					"notice": "Chainlink ETH/USD price feed."
-				},
-				"s_supportedTokens(address)": {
-					"notice": "Supported tokens mapping."
-				},
 				"s_totalDepositsByToken(address)": {
-					"notice": "Total number of deposits made per token."
+					"notice": "PUEDE QUE LA CANTIDAD DE DEPOSITS POR TOKEN LOS ELIMINE Y VUELVAN A SER GENERALES Total number of deposits made per token."
 				},
-				"s_totalWithdrawalsByToken(address)": {
-					"notice": "Total number of withdrawals made per token."
+				"s_totalWithdrawals()": {
+					"notice": "Total number of withdrawals made."
+				},
+				"uniswapRouter()": {
+					"notice": "Uniswap V2 Router instance for token swaps."
 				}
 			},
 			"version": 1
@@ -598,14 +500,6 @@
 		"remappings": []
 	},
 	"sources": {
-		"@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol": {
-			"keccak256": "0x257a8d28fa83d3d942547c8e129ef465e4b5f3f31171e7be4739a4c98da6b4f0",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://6d39e11b1dc7b9b8ccdabbc9be442ab7cda4a81c748f57e316dcb1bcb4a28bf9",
-				"dweb:/ipfs/QmaG6vz6W6iEUBsbHSBob5mdcitYxWjoygxREHpsJHfWrS"
-			]
-		},
 		"@openzeppelin/contracts/access/Ownable.sol": {
 			"keccak256": "0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb",
 			"license": "MIT",
@@ -614,12 +508,52 @@
 				"dweb:/ipfs/QmfEckWLmZkDDcoWrkEvMWhms66xwTLff9DDhegYpvHo1a"
 			]
 		},
+		"@openzeppelin/contracts/interfaces/IERC1363.sol": {
+			"keccak256": "0xd5ea07362ab630a6a3dee4285a74cf2377044ca2e4be472755ad64d7c5d4b69d",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://da5e832b40fc5c3145d3781e2e5fa60ac2052c9d08af7e300dc8ab80c4343100",
+				"dweb:/ipfs/QmTzf7N5ZUdh5raqtzbM11yexiUoLC9z3Ws632MCuycq1d"
+			]
+		},
+		"@openzeppelin/contracts/interfaces/IERC165.sol": {
+			"keccak256": "0x0afcb7e740d1537b252cb2676f600465ce6938398569f09ba1b9ca240dde2dfc",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1c299900ac4ec268d4570ecef0d697a3013cd11a6eb74e295ee3fbc945056037",
+				"dweb:/ipfs/Qmab9owJoxcA7vJT5XNayCMaUR1qxqj1NDzzisduwaJMcZ"
+			]
+		},
+		"@openzeppelin/contracts/interfaces/IERC20.sol": {
+			"keccak256": "0x1a6221315ce0307746c2c4827c125d821ee796c74a676787762f4778671d4f44",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://1bb2332a7ee26dd0b0de9b7fe266749f54820c99ab6a3bcb6f7e6b751d47ee2d",
+				"dweb:/ipfs/QmcRWpaBeCYkhy68PR3B4AgD7asuQk7PwkWxrvJbZcikLF"
+			]
+		},
 		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
 			"keccak256": "0x74ed01eb66b923d0d0cfe3be84604ac04b76482a55f9dd655e1ef4d367f95bc2",
 			"license": "MIT",
 			"urls": [
 				"bzz-raw://5282825a626cfe924e504274b864a652b0023591fa66f06a067b25b51ba9b303",
 				"dweb:/ipfs/QmeCfPykghhMc81VJTrHTC7sF6CRvaA1FXVq2pJhwYp1dV"
+			]
+		},
+		"@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+			"keccak256": "0xd6fa4088198f04eef10c5bce8a2f4d60554b7ec4b987f684393c01bf79b94d9f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://f95ee0bbd4dd3ac730d066ba3e785ded4565e890dbec2fa7d3b9fe3bad9d0d6e",
+				"dweb:/ipfs/QmSLr6bHkPFWT7ntj34jmwfyskpwo97T9jZUrk5sz3sdtR"
+			]
+		},
+		"@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol": {
+			"keccak256": "0x982c5cb790ab941d1e04f807120a71709d4c313ba0bfc16006447ffbd27fbbd5",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://8150ceb4ac947e8a442b2a9c017e01e880b2be2dd958f1fa9bc405f4c5a86508",
+				"dweb:/ipfs/QmbcBmFX66AY6Kbhnd5gx7zpkgqnUafo43XnmayAM7zVdB"
 			]
 		},
 		"@openzeppelin/contracts/utils/Context.sol": {
@@ -638,12 +572,48 @@
 				"dweb:/ipfs/QmZiKwtKU1SBX4RGfQtY7PZfiapbbu6SZ9vizGQD9UHjRA"
 			]
 		},
-		"contracts/KipuBankV3.sol": {
-			"keccak256": "0xa943f340d86c8bffc19b90c9dcc9eac22fb9246365bd99900000eae01a915c17",
+		"@openzeppelin/contracts/utils/introspection/IERC165.sol": {
+			"keccak256": "0x8891738ffe910f0cf2da09566928589bf5d63f4524dd734fd9cedbac3274dd5c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e0edefd7a60efe9448418b7250e089322a8e4890dfc425b9b0970730e0fc2ee7",
-				"dweb:/ipfs/QmfCGy6AwiGWSCWpkt4QFyGBN7MzE5sqREnWrEiNhPx3yc"
+				"bzz-raw://971f954442df5c2ef5b5ebf1eb245d7105d9fbacc7386ee5c796df1d45b21617",
+				"dweb:/ipfs/QmadRjHbkicwqwwh61raUEapaVEtaLMcYbQZWs9gUkgj3u"
+			]
+		},
+		"@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol": {
+			"keccak256": "0xe5905c0989cf5a865ed9bb7b9252536ca011c5b744017a82a7d4443b9c00a891",
+			"urls": [
+				"bzz-raw://5d2a90a0a796491507462a3da18c3f8819721d571572d765a2207c35bf0a0389",
+				"dweb:/ipfs/Qmf9ACYiT3qzjgsYuhm866FBdiBpRMXAPpQhSFbgqcyhHt"
+			]
+		},
+		"@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol": {
+			"keccak256": "0x7c9bc70e5996c763e02ff38905282bc24fb242b0ef2519a003b36824fc524a4b",
+			"urls": [
+				"bzz-raw://85d5ad2dd23ee127f40907a12865a1e8cb5828814f6f2480285e1827dd72dedf",
+				"dweb:/ipfs/QmayKQWJgWmr46DqWseADyUanmqxh662hPNdAkdHRjiQQH"
+			]
+		},
+		"@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router01.sol": {
+			"keccak256": "0x8a3c5c449d4b7cd76513ed6995f4b86e4a86f222c770f8442f5fc128ce29b4d2",
+			"urls": [
+				"bzz-raw://1df63ca373dafae3bd0ee7fe70f890a1dc7c45ed869c01de68413e0e97ff9deb",
+				"dweb:/ipfs/QmefJgEYGUL8KX7kQKYTrDweF8GB7yjy3nw5Bmqzryg7PG"
+			]
+		},
+		"@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol": {
+			"keccak256": "0x744e30c133bd0f7ca9e7163433cf6d72f45c6bb1508c2c9c02f1a6db796ae59d",
+			"urls": [
+				"bzz-raw://9bf2f4454ad63d4cff03a0630e787d9e8a9deed80aec89682cd8ad6379d9ef8c",
+				"dweb:/ipfs/Qme51hQNR2wpax7ooUadhtqLtXm8ffeVVYyubLkTT4wMCG"
+			]
+		},
+		"contracts/KipuBankV3.sol": {
+			"keccak256": "0xcea0f8ca55515111e8412b4aea06c18fd906073d565cb2c588dfd804ce476023",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6c3f49d9425bd89c33f29ce136ba9b91a79662dc39cd87666c2d91134b6a0efd",
+				"dweb:/ipfs/QmV4CUsaisCWRvcFudgcW6jGfTFjz79HeVPeuqUeML8WYC"
 			]
 		}
 	},
