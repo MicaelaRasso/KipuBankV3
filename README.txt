@@ -20,22 +20,31 @@ El contrato original era un banco simple de ETH. Las mejoras en KipuBankV3 lo tr
 Instrucciones de Despliegue e Interacción
 Despliegue
 
-El despliegue requiere siete (7) argumentos en el constructor:
-
-    initialOwner (address): Dirección del dueño del contrato.
-    _ethFeed (address): Dirección del Oráculo ETH/USD de Chainlink.
-    _btcFeed (address): Dirección del Oráculo BTC/USD de Chainlink.
-    _btc (address): Dirección del token BTC (ej. WBTC).
-    _usdc (address): Dirección del token USDC.
-    _bankCap (uint256): Capacidad máxima del banco (en USD, sin decimales). Ejemplo: 1000000.
-    _maxWithdrawal (uint256): Retiro máximo por transacción (en USD, sin decimales). Ejemplo: 5000.
+El despliegue requiere siete (8) argumentos en el constructor:
+| Parámetro | Tipo | Descripción |
+|------------|------|-------------|
+| `_initialOwner` | `address` | Dirección del dueño del contrato. |
+| `_weth` | `address` | Dirección del token WETH en Sepolia. |
+| `_usdc` | `address` | Dirección del token USDC (o mock USDC) en Sepolia. |
+| `_router` | `address` | Dirección del Router de Uniswap V2. |
+| `_factory` | `address` | Dirección del Factory de Uniswap V2. |
+| `_ethFeed` | `address` | Dirección del oráculo ETH/USD de Chainlink. |
+| `_btcFeed` | `address` | Dirección del oráculo BTC/USD de Chainlink. |
+| `_bankCap` | `uint256` | Capacidad máxima del banco (en USD, sin decimales). |
+| `_maxWithdrawal` | `uint256` | Límite máximo de retiro por transacción (en USD). |
 
 Interacción
 
 | Función | Descripción | Requerimientos | | deposit() | Deposita ETH nativo. | Debe ser payable. | | withdraw(uint256 amount) | Retira ETH del saldo del usuario. | Saldo suficiente y monto menor a i_maxWithdrawal. | | depositERC20(uint256 amount) | Deposita tokens ERC20, presentes en UniSwap. | El usuario debe haber aprobado (approve) la transferencia previamente. | | withdrawUSDC(uint256 amount) | Retira tokens USDC. | Saldo suficiente y monto menor a i_maxWithdrawal. | | consultKipuBankFounds() | Retorna el valor total de todos los activos del banco en USDC. | view function. | | setFeeds(...) | Actualiza las direcciones de los oráculos. | onlyOwner. | | emergencyWithdrawal(...) | Retira ETH o ERC20 enviados por error al contrato. | onlyOwner. |
-Notas de Diseño y Trade-offs
-1. Estandarización de Unidades
 
-Decisión: Estandarizar toda la contabilidad del valor global del banco a USD con 8 decimales (el estándar de los feeds de Chainlink). Beneficio: Permite que la capacidad máxima y los límites de retiro sean en USDC limpios, proporcionando un límite de riesgo predecible a pesar de la volatilidad de los activos subyacentes. Trade-off: Requiere operaciones matemáticas de escalado y desescalado complejas para cada depósito/retiro (gas cost).
-2. Seguridad ERC20 (CEI)
-Las funciones de retiro de ERC20 (withdrawUSDC, withdrawBTC) utilizan la estructura Checks-Effects-Interactions (CEI), asegurando que el estado del contrato (saldos) se actualice antes de realizar la transferencia externa de tokens. Esto previene ataques de reentrancy.
+#### Ejemplo (Sepolia)
+
+{
+	"address _initialOwner": "",
+	"address _weth": "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
+	"address _usdc": "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238",
+	"address _router": "0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3",
+	"address _factory": "0xF62c03E08ada871A0bEb309762E260a7a6a880E6",
+	"uint256 _bankCap": "10000",
+	"uint256 _maxWithdrawal": "500"
+}
