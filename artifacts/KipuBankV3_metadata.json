@@ -144,6 +144,19 @@
 				"inputs": [
 					{
 						"indexed": false,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "KipuBank_EmergencyWithdrawal",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
 						"internalType": "address",
 						"name": "receiver",
 						"type": "address"
@@ -461,26 +474,7 @@
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {
-				"i_bankCap()": {
-					"notice": "Maximum Ether capacity that the bank can hold."
-				},
-				"i_maxWithdrawal()": {
-					"notice": "Maximum allowed withdrawal amount per transaction."
-				},
-				"i_usdc()": {
-					"notice": "USDC ERC20 token instance."
-				},
-				"s_totalDepositsByToken(address)": {
-					"notice": "PUEDE QUE LA CANTIDAD DE DEPOSITS POR TOKEN LOS ELIMINE Y VUELVAN A SER GENERALES Total number of deposits made per token."
-				},
-				"s_totalWithdrawals()": {
-					"notice": "Total number of withdrawals made."
-				},
-				"uniswapRouter()": {
-					"notice": "Uniswap V2 Router instance for token swaps."
-				}
-			},
+			"methods": {},
 			"version": 1
 		}
 	},
@@ -609,11 +603,11 @@
 			]
 		},
 		"contracts/KipuBankV3.sol": {
-			"keccak256": "0xcea0f8ca55515111e8412b4aea06c18fd906073d565cb2c588dfd804ce476023",
+			"keccak256": "0x6a31cf30787f9784facb63dc614623fe0475c5fa833946367163d5069584185c",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6c3f49d9425bd89c33f29ce136ba9b91a79662dc39cd87666c2d91134b6a0efd",
-				"dweb:/ipfs/QmV4CUsaisCWRvcFudgcW6jGfTFjz79HeVPeuqUeML8WYC"
+				"bzz-raw://fb26ba59340ae14f394413e6e4eeece2a3dcaf4f133b9ac95e8faa6fcc4f6a23",
+				"dweb:/ipfs/QmRAmdoGwLNujaJHnvK24RjUqBXN5faS3MtjKBpQePDNUi"
 			]
 		}
 	},
