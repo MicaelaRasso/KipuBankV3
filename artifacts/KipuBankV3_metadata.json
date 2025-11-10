@@ -87,7 +87,7 @@
 						"type": "bytes"
 					}
 				],
-				"name": "KipuBank_InsufficientFounds",
+				"name": "KipuBank_InsufficientFunds",
 				"type": "error"
 			},
 			{
@@ -215,7 +215,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "consultKipuBankFounds",
+				"name": "consultKipuBankFunds",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -437,6 +437,41 @@
 		],
 		"devdoc": {
 			"errors": {
+				"KipuBank_FailedDeposit(bytes)": [
+					{
+						"params": {
+							"error": "Encoded error message returned by the failed call."
+						}
+					}
+				],
+				"KipuBank_FailedOperation(bytes)": [
+					{
+						"params": {
+							"error": "Encoded error message returned by the failed call."
+						}
+					}
+				],
+				"KipuBank_FailedWithdrawal(bytes)": [
+					{
+						"params": {
+							"error": "Encoded error message returned by the failed call."
+						}
+					}
+				],
+				"KipuBank_InsufficientFunds(bytes)": [
+					{
+						"params": {
+							"error": "Encoded error message returned by the failed call."
+						}
+					}
+				],
+				"KipuBank_NotSupportedToken(address)": [
+					{
+						"params": {
+							"token": "The address of the unsupported token."
+						}
+					}
+				],
 				"OwnableInvalidOwner(address)": [
 					{
 						"details": "The owner is not a valid owner account. (eg. `address(0)`)"
@@ -458,8 +493,60 @@
 					}
 				]
 			},
+			"events": {
+				"KipuBank_EmergencyWithdrawal(uint256)": {
+					"params": {
+						"amount": "The amount of USDC withdrawn by the owner."
+					}
+				},
+				"KipuBank_SuccessfulDeposit(address,uint256)": {
+					"params": {
+						"amount": "The net amount of USDC credited to the user's balance.",
+						"receiver": "The address making the deposit."
+					}
+				},
+				"KipuBank_SuccessfulWithdrawal(address,uint256)": {
+					"params": {
+						"amount": "The amount of USDC withdrawn.",
+						"receiver": "The address receiving the withdrawn funds."
+					}
+				}
+			},
 			"kind": "dev",
 			"methods": {
+				"constructor": {
+					"custom:error": "KipuBank_DeniedContract Thrown if the capacity or withdrawal limits are set too low.",
+					"params": {
+						"_bankCap": "The maximum capacity the bank can hold (in unscaled USD value).",
+						"_initialOwner": "The address that will be set as the contract owner.",
+						"_maxWithdrawal": "The maximum amount a user can withdraw per transaction (in unscaled USD value).",
+						"_router": "The address of the Uniswap V2 Router02.",
+						"_usdc": "The address of the USDC ERC20 token. ",
+						"_weth": "The address of the WETH token (used for ETH swaps)."
+					}
+				},
+				"consultKipuBankFunds()": {
+					"returns": {
+						"amount_": "The contract's USDC balance (6 decimals)."
+					}
+				},
+				"deposit()": {
+					"details": "Calls _depositETH and is protected by nonReentrant."
+				},
+				"depositERC20(address,uint256,uint256)": {
+					"custom:error": "KipuBank_FailedDeposit Thrown if the post-swap USDC balance exceeds i_bankCap.",
+					"params": {
+						"_amountIn": "The amount of the ERC20 token being deposited.",
+						"_amountMinOut": "The minimum amount of USDC expected to receive from the swap.",
+						"_token": "The address of the ERC20 token being deposited."
+					}
+				},
+				"emergencyWithdrawal(uint256,address)": {
+					"params": {
+						"_amount": "The amount of USDC to withdraw.",
+						"_recipient": "The address to send the funds to."
+					}
+				},
 				"owner()": {
 					"details": "Returns the address of the current owner."
 				},
@@ -468,13 +555,104 @@
 				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				},
+				"withdrawUsdc(uint256)": {
+					"params": {
+						"_amount": "The amount of USDC to withdraw (in USDC decimals)."
+					}
 				}
 			},
 			"version": 1
 		},
 		"userdoc": {
+			"errors": {
+				"KipuBank_DeniedContract()": [
+					{
+						"notice": "Thrown during deployment if bank limits are set too low."
+					}
+				],
+				"KipuBank_FailedDeposit(bytes)": [
+					{
+						"notice": "Thrown when a deposit fails due to exceeding the bank's maximum capacity."
+					}
+				],
+				"KipuBank_FailedOperation(bytes)": [
+					{
+						"notice": "Thrown for general operational failures."
+					}
+				],
+				"KipuBank_FailedWithdrawal(bytes)": [
+					{
+						"notice": "Thrown when a withdrawal fails."
+					}
+				],
+				"KipuBank_InsufficientFunds(bytes)": [
+					{
+						"notice": "Thrown when a withdrawal is attempted without sufficient user balance."
+					}
+				],
+				"KipuBank_NotSupportedToken(address)": [
+					{
+						"notice": "Thrown when a deposit is attempted for an ERC20 token that lacks a direct pair with USDC on Uniswap V2."
+					}
+				]
+			},
+			"events": {
+				"KipuBank_EmergencyWithdrawal(uint256)": {
+					"notice": "Emitted when the owner executes an emergency withdrawal of USDC."
+				},
+				"KipuBank_SuccessfulDeposit(address,uint256)": {
+					"notice": "Emitted when a deposit is successful."
+				},
+				"KipuBank_SuccessfulWithdrawal(address,uint256)": {
+					"notice": "Emitted when a withdrawal is successful."
+				}
+			},
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"constructor": {
+					"notice": "Deploys the contract, initializing the owner, bank limits, supported tokens and the Uniswap V2 environment."
+				},
+				"consultKipuBankFunds()": {
+					"notice": "Returns the total consolidated value of all assets held by the bank, which is the total balance of USDC."
+				},
+				"deposit()": {
+					"notice": "Allows users to deposit native Ether (ETH) into the bank. ETH is automatically swapped to USDC."
+				},
+				"depositERC20(address,uint256,uint256)": {
+					"notice": "Allows users to deposit any supported ERC20 token. The token is automatically swapped to USDC."
+				},
+				"emergencyWithdrawal(uint256,address)": {
+					"notice": "Allows the contract owner to safely withdraw USDC from the contract in case of emergency or error."
+				},
+				"i_bankCap()": {
+					"notice": "Maximum USD capacity that the bank can hold, scaled to 6 USDC decimals. Immutable."
+				},
+				"i_maxWithdrawal()": {
+					"notice": "Maximum allowed withdrawal amount per transaction in USDC. Immutable."
+				},
+				"i_usdc()": {
+					"notice": "The immutable interface address for the USDC ERC20 token."
+				},
+				"i_weth()": {
+					"notice": "The immutable address for the WETH token, used as the intermediary for ETH swaps."
+				},
+				"s_totalDepositsByToken(address)": {
+					"notice": "Total number of deposits made, tracked by the original token deposited."
+				},
+				"s_totalWithdrawals()": {
+					"notice": "Total count of withdrawal operations executed from the bank."
+				},
+				"uniswapFactory()": {
+					"notice": "The immutable interface for the Uniswap V2 Factory, derived from the router address."
+				},
+				"uniswapRouter()": {
+					"notice": "The immutable interface for the Uniswap V2 Router, used for all swaps to USDC."
+				},
+				"withdrawUsdc(uint256)": {
+					"notice": "Allows users to withdraw their consolidated balance, which is always paid out in USDC."
+				}
+			},
 			"version": 1
 		}
 	},
@@ -603,11 +781,11 @@
 			]
 		},
 		"contracts/KipuBankV3.sol": {
-			"keccak256": "0x6a31cf30787f9784facb63dc614623fe0475c5fa833946367163d5069584185c",
+			"keccak256": "0xdc1f5aedb1043eb1b70cdd340c9a1ff09d1c28a8033e355dc67f45057ec5a6e9",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://fb26ba59340ae14f394413e6e4eeece2a3dcaf4f133b9ac95e8faa6fcc4f6a23",
-				"dweb:/ipfs/QmRAmdoGwLNujaJHnvK24RjUqBXN5faS3MtjKBpQePDNUi"
+				"bzz-raw://537fa6af266f1dc7a97d2f5bf3f4b8bcca291ab11492eca7b0a2d113a5d3b87b",
+				"dweb:/ipfs/QmNcF2uDBGvhBbZRdJN4GqvTmpcYWmo4MKGffyouFMNMEV"
 			]
 		}
 	},
