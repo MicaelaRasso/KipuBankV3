@@ -28,6 +28,11 @@
 						"type": "address"
 					},
 					{
+						"internalType": "address",
+						"name": "_factory",
+						"type": "address"
+					},
+					{
 						"internalType": "uint256",
 						"name": "_bankCap",
 						"type": "uint256"
@@ -518,6 +523,7 @@
 					"custom:error": "KipuBank_DeniedContract Thrown if the capacity or withdrawal limits are set too low.",
 					"params": {
 						"_bankCap": "The maximum capacity the bank can hold (in unscaled USD value).",
+						"_factory": "The address of the Uniswap V2 Factory.",
 						"_initialOwner": "The address that will be set as the contract owner.",
 						"_maxWithdrawal": "The maximum amount a user can withdraw per transaction (in unscaled USD value).",
 						"_router": "The address of the Uniswap V2 Router02.",
@@ -781,11 +787,11 @@
 			]
 		},
 		"contracts/KipuBankV3.sol": {
-			"keccak256": "0xdc1f5aedb1043eb1b70cdd340c9a1ff09d1c28a8033e355dc67f45057ec5a6e9",
+			"keccak256": "0x61b13ec90f4f6bd479dec03ec83034601d013a55b7318c8aecfab7e4fbca46e2",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://537fa6af266f1dc7a97d2f5bf3f4b8bcca291ab11492eca7b0a2d113a5d3b87b",
-				"dweb:/ipfs/QmNcF2uDBGvhBbZRdJN4GqvTmpcYWmo4MKGffyouFMNMEV"
+				"bzz-raw://4b5d6cc8e3a932959a9c9b1bdaa1e6fc6aef78dd3ff2ed01a3a5ff7ae2d579ef",
+				"dweb:/ipfs/Qma4RcrBPj9X7GiWEn6TQdqxmWoAdJYiQ9a8PR8tCTjG7P"
 			]
 		}
 	},

@@ -6,9 +6,9 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IUniswapV2Router02} from "@uniswap/v2-periphery/contracts/interfaces/IUniswapV2Router02.sol";
-import { IUniswapV2Factory } from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
-import { IUniswapV2Pair } from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
-import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IUniswapV2Factory} from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Factory.sol";
+import {IUniswapV2Pair} from "@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol";
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 /*Interfaces*/
 import { IERC20Metadata } from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
@@ -144,12 +144,14 @@ contract KipuBankV3 is Ownable, ReentrancyGuard{
     /// @param _weth The address of the WETH token (used for ETH swaps).
     /// @param _usdc The address of the USDC ERC20 token. 
     /// @param _router The address of the Uniswap V2 Router02.
+    /// @param _factory The address of the Uniswap V2 Factory.
     /// @param _bankCap The maximum capacity the bank can hold (in unscaled USD value).
     /// @param _maxWithdrawal The maximum amount a user can withdraw per transaction (in unscaled USD value).
     /// @custom:error KipuBank_DeniedContract Thrown if the capacity or withdrawal limits are set too low.
     constructor(
         address _initialOwner, 
-        address _weth, address _usdc, address _router,
+        address _weth, address _usdc, 
+        address _router, address _factory,
         uint256 _bankCap, uint256 _maxWithdrawal
         ) Ownable(_initialOwner)
         {
@@ -162,7 +164,7 @@ contract KipuBankV3 is Ownable, ReentrancyGuard{
         i_weth = _weth;
 
         uniswapRouter = IUniswapV2Router02(_router);
-        uniswapFactory = IUniswapV2Factory(uniswapRouter.factory());
+        uniswapFactory = IUniswapV2Factory(_factory);
     }
 
 //receive & fallback
